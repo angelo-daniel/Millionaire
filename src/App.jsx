@@ -9,7 +9,27 @@ function App() {
   const [nameValue2, setNameValue2] = useState("");
   const [mode, whatMode] = useState(1);
   const [difficulty, setDifficulty] = useState(1);
+  
+  
 
+
+  const easyQuestions = [{
+    id: "1",
+    question: "How Many Legs does a spider have? 🐞",
+    answers: ["Four(4)", "Eight(8)", "Two(2)", "Nine(9)"],
+    correctAnswer: "Eight(8)"
+    }, 
+    {
+      id: "2",
+      question: "What is the capital of the Philippines? 🏙",
+      answers: ["Paris", "Pyongyang", "Shenzen", "Manila"],
+      correctAnswer: "Manila"
+    }]
+  
+
+  const [data, setData] = useState(easyQuestions);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const currentQuestion = data[currentQuestionIndex];
 
   const modeSelect1 =()=>{
     whatMode(1);
@@ -106,30 +126,43 @@ function App() {
                   <div className='difficulty-text'>
                       <h5>Easy</h5>
                       <ul className='styled-list'>
-                        <li>Question 1</li>
-                        <li>Question 2</li>
-                        <li>Question 3</li>
-                        <li>Question 4</li>
-                        <li>Question 5</li>
+                        {easyQuestions.map((q, index) => 
+                          <li key={q.id}
+                              className={currentQuestionIndex === index ? "active-question" : ""}
+                              >
+                                Question {index + 1}
+                              </li>
+                        )}  
                       </ul>
                       <h5>Medium</h5>
                         <ul className='styled-list'>
-                        <li>Question 1</li>
-                        <li>Question 2</li>
-                        <li>Question 3</li>
-                        <li>Question 4</li>
+                        <li>Question 6</li>
+                        <li>Question 7</li>
+                        <li>Question 8</li>
+                        <li>Question 9</li>
                       </ul>
                       <h5>Hard</h5>
                         <ul className='styled-list'>
-                        <li>Question 1</li>
-                        <li>Question 2</li>
-                        <li>Question 3</li>
+                        <li>Question 10</li>
+                        <li>Question 11</li>
+                        <li>Question 12</li>
                       </ul>
                   </div>
               </div>
 
               <div className='right-panel-1pmode'>
-                  <h2>THIS IS THE GAME PANEL</h2>
+                  <div className="question-flashcard">
+                      <>
+                        {currentQuestion ? currentQuestion.question : "Loading..."}
+                      </>
+                  </div>
+
+                  <div className='answers-container'>
+                    {currentQuestion.answers.map((answer, index) => 
+                    <div key ={index} className="answer-flashcard">
+                      {answer}
+                      </div> )}
+                  </div>
               </div>
             </>
            ) }
