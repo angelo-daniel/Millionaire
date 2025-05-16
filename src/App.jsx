@@ -64,8 +64,30 @@ function App() {
     <div className='app-container'>
       <div className='top-bar' >
           {gameStart ? (
-            <div className='top-bar-left'>
-            </div>
+
+            <>
+              {mode === 1 && (
+                <>
+                <div className='top-bar-left'>
+                  <h2>Who Wants To Be A Millionaire😎</h2>
+                </div><div className='top-bar-right'>
+                    <h3>Welcome {username} 😃</h3>
+                  </div>
+                  </>
+              )
+              }
+
+              {mode === 2 && (
+                <>
+                <div className='top-bar-left'>
+                  <h2>Who Wants To Be A Millionaire😎</h2>
+                </div><div className='top-bar-right'>
+                    <h3>Welcome Players:  {username}* 😃, {username2}* 😃</h3>
+                  </div>
+                </>
+              )}
+            
+            </>
           ) : (
             <h1></h1>
           )}
@@ -80,7 +102,7 @@ function App() {
            {mode === 1 && (
             <>
             
-            <h5>THIS IS PLAYER ONE MODE, Welcome {username}</h5>
+            
             <div className='flashcard' >
               <h3>Question 1:</h3>
 

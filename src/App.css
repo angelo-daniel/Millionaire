@@ -155,7 +155,9 @@ width: auto;
   color: white;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   z-index: 9999;
-  
+  box-sizing: border-box;
+  padding: 10px 20px;
+  font-family: impact;
 }
