@@ -1,0 +1,161 @@
+/* #root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+} */
+.app-container{
+  display: flex;
+  flex-direction: column;
+  height:100vh;
+}
+
+html, body{
+  background-color: lightskyblue;
+  margin:0;
+  padding:0;
+  height: 100%;
+  overflow: hidden;
+}
+
+#main-content{
+ flex: 1;
+ display: flex;
+ flex-direction: column;
+ justify-content: center;
+ align-items: center;
+ padding-top: 30px;
+ text-align: center;
+ width: auto;
+}
+
+.footer{
+  height: 60px;
+  background-color: #eee;
+  width: 100vw;
+}
+
+.nostart-div{
+justify-content: center;
+align-items: center;
+width: auto;
+}
+
+.start-button {
+  background:blue;
+  width:200px;
+  height:50px;
+  font-Size:120%;
+  color:white;
+  text-align:center;
+  cursor:pointer;
+  display:block;
+  padding-bottom:15px;
+  transition: background-position 0.3s ease;
+  background-image: linear-gradient(to right, blue 50%, purple 50%);
+  background-size: 200% 100%;
+  background-position: left bottom;
+  margin-bottom: 10px;
+  margin-left: 35%;
+}
+
+.start-button:hover{
+  background-position: right bottom;
+  border: 2px solid yellow;
+}
+
+.name-inputs-container{
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  width: auto;
+}
+
+.name-input1, .name-input2 {
+  width: 150px; 
+  height: 50px;
+  padding-left: 15px;
+  font-family: Impact;
+  margin-bottom: 20px;
+}
+
+.main-div{
+  width:100%;
+  height:100%;
+  display:flex;
+  flex-Direction:column;
+  justify-Content:center;
+  align-Items:center;
+  text-Align:center;
+  font-Family:Impact;
+}
+
+.spModeButton{
+  cursor:pointer;
+  background-image: linear-gradient(to right, white 50%, purple 50%);
+  background-size: 200% 100%;
+  background-position: left bottom;
+  transition: background-position 0.2s ease;
+  color: black;
+}
+
+.spModeButton:hover:not(:disabled){
+  background-position: right bottom;
+  color: white;
+}
+
+.spModeButton:disabled{
+  background-image: none;
+  background-color: purple;
+  cursor: not-allowed;
+  color: white;
+  border: black 2px;
+}
+
+.compModeButton {
+  cursor:pointer;
+  background-image: linear-gradient(to right, white 50%, purple 50%);
+  background-size: 200% 100%;
+  background-position: left bottom;
+  transition: background-position 0.2s ease;
+  color:black;  
+}
+
+.compModeButton:hover:not(:disabled){
+  background-position: right bottom;
+  color: white;
+}
+
+.compModeButton:disabled{
+  background-image: none;
+  background-color: purple;
+  cursor: not-allowed;
+  color: white;
+}
+
+.flashcard{
+  width: 200px;
+  height: 120px;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  padding: 16px;
+  cursor: pointer;
+  transition: transform 0.6s;
+}
+.top-bar{
+ position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 60px;
+  background-color: #222;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  
+}
