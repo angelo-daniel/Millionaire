@@ -8,6 +8,7 @@ function App() {
   const [nameValue, setNameValue] = useState("");
   const [nameValue2, setNameValue2] = useState("");
   const [mode, whatMode] = useState(1);
+  const [difficulty, setDifficulty] = useState(1);
 
 
   const modeSelect1 =()=>{
@@ -23,8 +24,8 @@ function App() {
       isGameStart(true)
       setUsername("Guest#3456")
     }
-    else if(nameValue.length > 25) {
-      alert("Name cannot exceed 25 characters :)")
+    else if(nameValue.length > 13) {
+      alert("Name cannot exceed 13 characters :)")
       setNameValue("")
     }
     else {
@@ -98,15 +99,38 @@ function App() {
         
         {gameStart ? (
 
-          <div>
+          <>
            {mode === 1 && (
             <>
-            
-            
-            <div className='flashcard' >
-              <h3>Question 1:</h3>
+              <div className='left-panel-1pmode'>
+                  <div className='difficulty-text'>
+                      <h5>Easy</h5>
+                      <ul className='styled-list'>
+                        <li>Question 1</li>
+                        <li>Question 2</li>
+                        <li>Question 3</li>
+                        <li>Question 4</li>
+                        <li>Question 5</li>
+                      </ul>
+                      <h5>Medium</h5>
+                        <ul className='styled-list'>
+                        <li>Question 1</li>
+                        <li>Question 2</li>
+                        <li>Question 3</li>
+                        <li>Question 4</li>
+                      </ul>
+                      <h5>Hard</h5>
+                        <ul className='styled-list'>
+                        <li>Question 1</li>
+                        <li>Question 2</li>
+                        <li>Question 3</li>
+                      </ul>
+                  </div>
+              </div>
 
-            </div>
+              <div className='right-panel-1pmode'>
+                  <h2>THIS IS THE GAME PANEL</h2>
+              </div>
             </>
            ) }
 
@@ -114,8 +138,8 @@ function App() {
             <>
             <h1>THIS IS PLAYER 2 MODE, Players:  {username}, {username2}</h1></>
            )}
-          </div>
-
+          
+          </>
 
         ): (
           <div className="main-div">
