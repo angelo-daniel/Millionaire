@@ -9,8 +9,8 @@ function App() {
   const [nameValue, setNameValue] = useState("");
   const [nameValue2, setNameValue2] = useState("");
   const [mode, whatMode] = useState(1);
-  const [timer, setTimer] = useState(25);
-  const [timerIsActive, setTimerIsActive] = useState(null);
+  const [timeLeft, setTimeLeft] = useState(45);
+  const [timerIsActive, setTimerIsActive] = useState(false);
   const [answerResult, setAnswerResult] = useState(null);
   
     const easyQuestions = [{
@@ -106,6 +106,7 @@ function App() {
   const [questionResults, setQuestionResults] = useState({});
   const [gameEnded, setGameEnded] = useState(false);
   const maxIndex = 12;
+  const [playerConfirm, setPlayerConfirm] = useState(false);
 
   const modeSelect1 =()=>{
     whatMode(1);
@@ -115,9 +116,10 @@ function App() {
   }
 
   const startGame =()=> {
+    setTimerIsActive(true);
+
     if(mode == 1) {
-      if(nameValue.length === 0 ) {
-      isGameStart(true)
+      if(nameValue.trim().length === 0 ) {
       setUsername("Guest#3456")
     }
     else if(nameValue.length > 13) {
@@ -125,7 +127,6 @@ function App() {
       setNameValue("")
     }
     else {
-      isGameStart(true);
       setUsername(nameValue)
     }
   }
@@ -151,8 +152,9 @@ function App() {
     else{
       setUsername2(nameValue2)
     }
-  isGameStart(true);  
     }
+    isGameStart(true);
+    
   }
   
   const handleAnswers =()=> {
@@ -169,33 +171,56 @@ function App() {
       }else {
         setAnswerResult(false);
       }
-      
 
+      setTimerIsActive(false);
+      setPlayerConfirm(true);
       setPlayer1hasSelected(false);
 
       setTimeout(() => {
+
         setPlayer1Selection(null);
         setAnswerResult(null);
+        setPlayerConfirm(false);
+        setTimeLeft(45);
+        setTimerIsActive(true);
+
         const nextIndex = currentQuestionIndex + 1;
         if(nextIndex > maxIndex) {
-          setGameEnded(true);
-
-          
+          setGameEnded(true)
         }
-        
-        
+
         else {
           setCurrentQuestionIndex(nextIndex);
         }
-      }, 1500);
-    
-      
+      }, 1500)
   }
+  
   useEffect(()=>{
     if (answerResult !== null ) {
-      console.log("Answer result changed, ", answerResult)
+     
     }
   }, [answerResult])
+
+  useEffect(() => {
+  if (!timerIsActive || timeLeft === 0) return;
+
+  const timer = setInterval(() => {
+    setTimeLeft(prev => prev - 1);
+  }, 1000);
+
+  return () => clearInterval(timer);
+  }, [timerIsActive, timeLeft]);
+
+  const getTimerColor =()=> {
+    if (timeLeft <= 15 ) return '#ef5350';
+    
+  }
+
+  useEffect(() => {
+    if(timerIsActive !== null){
+      console.log(timerIsActive);
+    }
+  }, [timerIsActive]);
   
   return (
     <>
@@ -240,42 +265,32 @@ function App() {
            {mode === 1 && (
             <>
               <div className='left-panel-1pmode'>
-                  <div className='difficulty-text'>
-                      <h5>Easy</h5>
+                <div className='difficulty-text'>
                       <ul className='styled-list'>
                         {easyQuestions.map((q, index) => 
                           <li key={q.id}
                               className={currentQuestionIndex === index ? "active-question" : 
                                 questionResults[index] === 'correct-answer' ? "correct-question" :
                                 questionResults[index] === 'incorrect-answer' ? "incorrect-question" :
-                                ""
-                              }
-                            
+                                "" }
                               >
                                 Question {index + 1}
                               </li>
                         )}  
                       </ul>
-                      {/* <h5>Medium</h5>
-                        <ul className='styled-list'>
-                        <li>Question 6</li>
-                        <li>Question 7</li>
-                        <li>Question 8</li>
-                        <li>Question 9</li>
-                      </ul>
-                      <h5>Hard</h5>
-                        <ul className='styled-list'>
-                        <li>Question 10</li>
-                        <li>Question 11</li>
-                        <li>Question 12</li>
-                      </ul> */}
-                  </div>
+                </div>
               </div>
 
               <div className='right-panel-1pmode'>
                   <div className="question-flashcard">
                       <>
-                      {gameEnded ? "GAME HAS ENDED" :
+                        <div className='timer'>
+                          <h2 style={{color: getTimerColor()}}>
+                            {timeLeft}
+                          </h2>
+                        </div>
+                        
+                      {gameEnded ? "GAME HAS ENDED, YOUR SCORE IS:" + player1Score + "/" + (maxIndex+1)  :
                         currentQuestion ? 
                         (
                           <>
@@ -291,28 +306,27 @@ function App() {
                       </>
                   </div>
                                       
-                  <div className='answers-container'>   
+                  <div className='answers-container' hidden={gameEnded}>   
+                    
                     {currentQuestion.answers.map((answer, index) => 
                     <div key ={index} className={`answer-flashcard
                       ${player1Selection === answer ? 'selected-answer' : ""}`
-                     }
-                      
+                      }
                         onClick={()=>{
                           console.log("Answer: ", answer);
                           setPlayer1Selection(answer); 
                           setPlayer1hasSelected(true);
-                        }}>
+                        }}
+                        >
                       {answer}
                       </div> )}
-                      
-                        <button disabled={!player1hasSelected}
+                        <button disabled={!player1hasSelected || playerConfirm}
                                 className='confirm-button'
                                 onClick={handleAnswers}>Confirm
-                                </button>
-                      
-                  </div>
-                  <div>
-                    <h1 style={{fontFamily:"impact", color:"white"}}>SCORE : {player1Score}</h1>
+                                </button> 
+                    </div>
+                  <div className='scoreboard'>
+                    <h1>SCORE : {player1Score}</h1>
                   </div>
               </div>
             </>
@@ -330,20 +344,20 @@ function App() {
             
             <br></br>
             <div className='nostart-div'>
-              <h1>WHO WANTS TO BE A MILLIONAIRE</h1>
-              <h2>GAME MODE</h2>
+              <h1>WHO WANTS TO BE A MILLIONAIRE💸</h1>
+              <h2>GAME MODE 🎮</h2>
               <button disabled={mode==1} 
               onClick={modeSelect1} 
               autoFocus={mode==1}
               className="spModeButton">
-                SINGLE PLAYER
+                🔈SINGLE PLAYER
                 </button>
 
               <button style={{marginLeft:'10px'}} 
               disabled={mode==2} 
               onClick={modeSelect2} 
               className="compModeButton">
-                COMPETITIVE
+                🔈COMPETITIVE
                 </button>
             
             <h2>What is your name?</h2>
