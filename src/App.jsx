@@ -90,7 +90,8 @@ function App() {
       question: "Who was the first “American Idol” winner?",
       answers: ["David Cook", "Carrie Underwood", "Ruben Studdard", "Kelly Clarkson"],
       correctAnswer: "Kelly Clarkson"
-    }]
+    },
+    ]
   
 
   const [data, setData] = useState(easyQuestions);
@@ -104,7 +105,7 @@ function App() {
   const [player2hasSelected, setPlayer2hasSelected] = useState(false);
   const [questionResults, setQuestionResults] = useState({});
   const [gameEnded, setGameEnded] = useState(false);
-  const maxIndex = 13;
+  const maxIndex = 12;
 
   const modeSelect1 =()=>{
     whatMode(1);
