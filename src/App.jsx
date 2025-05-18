@@ -1,5 +1,6 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import './App.css'
+import './Game.css'
 
 function App() {
   const [gameStart, isGameStart] = useState(false);
@@ -8,12 +9,11 @@ function App() {
   const [nameValue, setNameValue] = useState("");
   const [nameValue2, setNameValue2] = useState("");
   const [mode, whatMode] = useState(1);
-  const [difficulty, setDifficulty] = useState(1);
+  const [timer, setTimer] = useState(25);
+  const [timerIsActive, setTimerIsActive] = useState(null);
+  const [answerResult, setAnswerResult] = useState(null);
   
-  
-
-
-  const easyQuestions = [{
+    const easyQuestions = [{
     id: "1",
     question: "How Many Legs does a spider have? 🐞",
     answers: ["Four(4)", "Eight(8)", "Two(2)", "Nine(9)"],
@@ -24,12 +24,87 @@ function App() {
       question: "What is the capital of the Philippines? 🏙",
       answers: ["Paris", "Pyongyang", "Shenzen", "Manila"],
       correctAnswer: "Manila"
+    },
+    {
+      id: "3", 
+      question: "What is the chemical symbol for water?💧",
+      answers: ["H2O", "K", "Au", "He"],
+      correctAnswer: "H2O"
+    }, 
+    {
+      id: "4", 
+      question: "How many letters are in the alphabet?🧾",
+      answers: ["27", "28", "22", "26"],
+      correctAnswer: "26"
+    }, 
+    {
+      id: "5",
+      question: "How many inches are in a foot?📏",
+      answers: ["14", "13", "12", "11"],
+      correctAnswer: "12"
+    }, 
+    {
+      id: "6",
+      question: "What is the only planet in our solar system to rotate clockwise on its axis?🌏",
+      answers: ["Venus", "Earth", "Mars", "Jupiter"],
+      correctAnswer: "Venus"
+    }, 
+    {
+      id: "7",
+      question: "What occasion corresponds with the longest day of the year?🌞",
+      answers: ["Winter Solstice", "Spring Equinox", "Autumnal Equinox", "Summer Solstice"],
+      correctAnswer: "Summer Solstice"
+    },
+    {
+      id: "8",
+      question: "What was Mac's first web browser?🖥",
+      answers: ["Samba", "Safari", "Firefox", "Opera"],
+      correctAnswer: "Samba"
+    },
+    {
+      id: "9",
+      question: "Now known as “Meta,” Facebook was originally named what?",
+      answers: ["MySpace", "Friendster", "ASN", "Facebook" ],
+      correctAnswer: "Facebook"
+    },
+    {
+      id: "10",
+      question: "Where did the 2000 Summer Olympics take place? ",
+      answers: ["New York City, USA ", "Sardinia, Italy", "Sydney, Australia", "Paris, France"],
+      correctAnswer: "Sydney, Australia"
+    }, 
+    {
+      id: "11",
+      question: "Which Canadian hockey player is considered to be the greatest of all time? ",
+      answers: ["Lebron James", "Usain Bolt", "Wayne Gretzky", "Michael Phelps"],
+      correctAnswer: "Wayne Gretzky"
+    },
+    {
+      id: "12",
+      question: "“Have it your way” is the memorable slogan of what fast food restaurant?",
+      answers: ["Burger King", "McDonalds", "Shakeys", "Chuck-e-Cheese"],
+      correctAnswer: "Burger King"
+    }, 
+    {
+      id: "13",
+      question: "Who was the first “American Idol” winner?",
+      answers: ["David Cook", "Carrie Underwood", "Ruben Studdard", "Kelly Clarkson"],
+      correctAnswer: "Kelly Clarkson"
     }]
   
 
   const [data, setData] = useState(easyQuestions);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const currentQuestion = data[currentQuestionIndex];
+  const [player1Score, setPlayer1Score] = useState(0);
+  const [player2Score, setPlayer2Score] = useState(0);
+  const [player1Selection, setPlayer1Selection] = useState(null);  
+  //FOR MULTIPLAYER
+  const [player1hasSelected, setPlayer1hasSelected] = useState(false);
+  const [player2hasSelected, setPlayer2hasSelected] = useState(false);
+  const [questionResults, setQuestionResults] = useState({});
+  const [gameEnded, setGameEnded] = useState(false);
+  const maxIndex = 13;
 
   const modeSelect1 =()=>{
     whatMode(1);
@@ -75,10 +150,51 @@ function App() {
     else{
       setUsername2(nameValue2)
     }
-  isGameStart(true);
+  isGameStart(true);  
     }
   }
+  
+  const handleAnswers =()=> {
+    const isCorrect = player1Selection === currentQuestion.correctAnswer;
+      
+      setPlayer1Score(prev => isCorrect ?  prev + 1 : prev);
+
+      setQuestionResults(prev=>({
+        ...prev, [currentQuestionIndex]: isCorrect ? 'correct-answer' : 'incorrect-answer'
+      }))
+
+      if(isCorrect){
+        setAnswerResult(true);
+      }else {
+        setAnswerResult(false);
+      }
+      
+
+      setPlayer1hasSelected(false);
+
+      setTimeout(() => {
+        setPlayer1Selection(null);
+        setAnswerResult(null);
+        const nextIndex = currentQuestionIndex + 1;
+        if(nextIndex > maxIndex) {
+          setGameEnded(true);
+
+          
+        }
+        
+        
+        else {
+          setCurrentQuestionIndex(nextIndex);
+        }
+      }, 1500);
     
+      
+  }
+  useEffect(()=>{
+    if (answerResult !== null ) {
+      console.log("Answer result changed, ", answerResult)
+    }
+  }, [answerResult])
   
   return (
     <>
@@ -128,13 +244,18 @@ function App() {
                       <ul className='styled-list'>
                         {easyQuestions.map((q, index) => 
                           <li key={q.id}
-                              className={currentQuestionIndex === index ? "active-question" : ""}
+                              className={currentQuestionIndex === index ? "active-question" : 
+                                questionResults[index] === 'correct-answer' ? "correct-question" :
+                                questionResults[index] === 'incorrect-answer' ? "incorrect-question" :
+                                ""
+                              }
+                            
                               >
                                 Question {index + 1}
                               </li>
                         )}  
                       </ul>
-                      <h5>Medium</h5>
+                      {/* <h5>Medium</h5>
                         <ul className='styled-list'>
                         <li>Question 6</li>
                         <li>Question 7</li>
@@ -146,22 +267,51 @@ function App() {
                         <li>Question 10</li>
                         <li>Question 11</li>
                         <li>Question 12</li>
-                      </ul>
+                      </ul> */}
                   </div>
               </div>
 
               <div className='right-panel-1pmode'>
                   <div className="question-flashcard">
                       <>
-                        {currentQuestion ? currentQuestion.question : "Loading..."}
+                      {gameEnded ? "GAME HAS ENDED" :
+                        currentQuestion ? 
+                        (
+                          <>
+                          <p>{currentQuestion.question}</p>
+                          {answerResult !==null && (
+                            <p className={`answer-result ${answerResult ? 'correct' : "incorrect"}`}>
+                            {answerResult? "Correct✔" : "Incorrect❌"}
+                            </p>
+                          )}
+                          </>
+                        ) : "Loading..."}
+                        
                       </>
                   </div>
-
-                  <div className='answers-container'>
+                                      
+                  <div className='answers-container'>   
                     {currentQuestion.answers.map((answer, index) => 
-                    <div key ={index} className="answer-flashcard">
+                    <div key ={index} className={`answer-flashcard
+                      ${player1Selection === answer ? 'selected-answer' : ""}`
+                     }
+                      
+                        onClick={()=>{
+                          console.log("Answer: ", answer);
+                          setPlayer1Selection(answer); 
+                          setPlayer1hasSelected(true);
+                        }}>
                       {answer}
                       </div> )}
+                      
+                        <button disabled={!player1hasSelected}
+                                className='confirm-button'
+                                onClick={handleAnswers}>Confirm
+                                </button>
+                      
+                  </div>
+                  <div>
+                    <h1 style={{fontFamily:"impact", color:"white"}}>SCORE : {player1Score}</h1>
                   </div>
               </div>
             </>
