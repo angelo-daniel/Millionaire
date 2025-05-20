@@ -38,6 +38,7 @@ html, body{
   height: 60px;
   background-color: #eee; 
   width: 100vw;
+  color: black;
 }
 
 .nostart-div{

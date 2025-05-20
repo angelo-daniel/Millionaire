@@ -15,79 +15,79 @@ function App() {
   
     const easyQuestions = [{
     id: "1",
-    question: "How Many Legs does a spider have? 🐞",
+    question: "🐞How Many Legs does a spider have? ",
     answers: ["Four(4)", "Eight(8)", "Two(2)", "Nine(9)"],
     correctAnswer: "Eight(8)"
     }, 
     {
       id: "2",
-      question: "What is the capital of the Philippines? 🏙",
+      question: "🏛What is the capital of the Philippines? ",
       answers: ["Paris", "Pyongyang", "Shenzen", "Manila"],
       correctAnswer: "Manila"
     },
     {
       id: "3", 
-      question: "What is the chemical symbol for water?💧",
+      question: "💧What is the chemical symbol for water?",
       answers: ["H2O", "K", "Au", "He"],
       correctAnswer: "H2O"
     }, 
     {
       id: "4", 
-      question: "How many letters are in the alphabet?🧾",
+      question: "🧾How many letters are in the alphabet?",
       answers: ["27", "28", "22", "26"],
       correctAnswer: "26"
     }, 
     {
       id: "5",
-      question: "How many inches are in a foot?📏",
+      question: "📏How many inches are in a foot?",
       answers: ["14", "13", "12", "11"],
       correctAnswer: "12"
     }, 
     {
       id: "6",
-      question: "What is the only planet in our solar system to rotate clockwise on its axis?🌏",
+      question: "🌏What is the only planet in our solar system to rotate clockwise on its axis?",
       answers: ["Venus", "Earth", "Mars", "Jupiter"],
       correctAnswer: "Venus"
     }, 
     {
       id: "7",
-      question: "What occasion corresponds with the longest day of the year?🌞",
+      question: "🌞What occasion corresponds with the longest day of the year?",
       answers: ["Winter Solstice", "Spring Equinox", "Autumnal Equinox", "Summer Solstice"],
       correctAnswer: "Summer Solstice"
     },
     {
       id: "8",
-      question: "What was Mac's first web browser?🖥",
+      question: "🔍What was Mac's first web browser?",
       answers: ["Samba", "Safari", "Firefox", "Opera"],
       correctAnswer: "Samba"
     },
     {
       id: "9",
-      question: "Now known as “Meta,” Facebook was originally named what?",
+      question: "🆕Now known as “Meta,” Facebook was originally named what?",
       answers: ["MySpace", "Friendster", "ASN", "Facebook" ],
       correctAnswer: "Facebook"
     },
     {
       id: "10",
-      question: "Where did the 2000 Summer Olympics take place? ",
+      question: "⚽Where did the 2000 Summer Olympics take place? ",
       answers: ["New York City, USA ", "Sardinia, Italy", "Sydney, Australia", "Paris, France"],
       correctAnswer: "Sydney, Australia"
     }, 
     {
       id: "11",
-      question: "Which Canadian hockey player is considered to be the greatest of all time? ",
+      question: "🏒Which Canadian hockey player is considered to be the greatest of all time? ",
       answers: ["Lebron James", "Usain Bolt", "Wayne Gretzky", "Michael Phelps"],
       correctAnswer: "Wayne Gretzky"
     },
     {
       id: "12",
-      question: "“Have it your way” is the memorable slogan of what fast food restaurant?",
+      question: "🍔“Have it your way” is the memorable slogan of what fast food restaurant?",
       answers: ["Burger King", "McDonalds", "Shakeys", "Chuck-e-Cheese"],
       correctAnswer: "Burger King"
     }, 
     {
       id: "13",
-      question: "Who was the first “American Idol” winner?",
+      question: "🎤Who was the first “American Idol” winner?",
       answers: ["David Cook", "Carrie Underwood", "Ruben Studdard", "Kelly Clarkson"],
       correctAnswer: "Kelly Clarkson"
     },
@@ -107,6 +107,7 @@ function App() {
   const [gameEnded, setGameEnded] = useState(false);
   const maxIndex = 12;
   const [playerConfirm, setPlayerConfirm] = useState(false);
+  const [winnings, setWinnings] =  useState(0);
 
   const modeSelect1 =()=>{
     whatMode(1);
@@ -168,6 +169,19 @@ function App() {
 
       if(isCorrect){
         setAnswerResult(true);
+
+          if((currentQuestionIndex+1) <= 5) {
+            setWinnings(prev => prev + 200 * (currentQuestionIndex+1));
+          }
+          else if ((currentQuestionIndex+1) > 5 && currentQuestionIndex <= 10) {
+            setWinnings(prev => prev + 400 * (currentQuestionIndex+1));
+          }
+          else if ((currentQuestionIndex+1) > 10 && currentQuestionIndex < 12){
+            setWinnings(prev => prev + 800 * (currentQuestionIndex+1));
+          }else {
+            setWinnings(prev => prev + 1600 * (currentQuestionIndex+1));
+          }
+
       }else {
         setAnswerResult(false);
       }
@@ -175,6 +189,7 @@ function App() {
       setTimerIsActive(false);
       setPlayerConfirm(true);
       setPlayer1hasSelected(false);
+      
 
       setTimeout(() => {
 
@@ -187,6 +202,7 @@ function App() {
         const nextIndex = currentQuestionIndex + 1;
         if(nextIndex > maxIndex) {
           setGameEnded(true)
+          setTimerIsActive(false);
         }
 
         else {
@@ -202,7 +218,7 @@ function App() {
   }, [answerResult])
 
   useEffect(() => {
-  if (!timerIsActive || timeLeft === 0) return;
+  if (!timerIsActive || timeLeft === 0)return;
 
   const timer = setInterval(() => {
     setTimeLeft(prev => prev - 1);
@@ -221,6 +237,21 @@ function App() {
       console.log(timerIsActive);
     }
   }, [timerIsActive]);
+
+  useEffect(()=>{
+    if(timerIsActive && timeLeft === 0) {
+      setGameEnded(true);
+      setTimerIsActive(false);
+      console.log("Timer us UP!");
+    }
+  })
+
+  const replay =()=>{
+    setGameEnded(false);
+    setCurrentQuestionIndex(0);
+    setTimerIsActive(true);
+    setTimeLeft(45);
+  }
   
   return (
     <>
@@ -284,13 +315,21 @@ function App() {
               <div className='right-panel-1pmode'>
                   <div className="question-flashcard">
                       <>
-                        <div className='timer'>
+                        <div className='timer' hidden ={gameEnded}>
                           <h2 style={{color: getTimerColor()}}>
                             {timeLeft}
                           </h2>
                         </div>
                         
-                      {gameEnded ? "GAME HAS ENDED, YOUR SCORE IS:" + player1Score + "/" + (maxIndex+1)  :
+                      {gameEnded ? (
+                        <>
+                          <div style={{fontSize:'120%'}}>
+                            <p>GAME HAS ENDED</p>
+                            <p>YOUR SCORE IS:  {player1Score}  /  {maxIndex+1}</p>
+                            <p>YOU WON: ₱ {winnings}.00</p>
+                            <button onClick={replay} className='replay-button'>🔈REPLAY</button>
+                          </div>
+                        </>) :
                         currentQuestion ? 
                         (
                           <>
@@ -305,13 +344,15 @@ function App() {
                         
                       </>
                   </div>
-                                      
-                  <div className='answers-container' hidden={gameEnded}>   
+
+                  {!gameEnded && (
+                    <div className='answers-container'>   
                     
                     {currentQuestion.answers.map((answer, index) => 
                     <div key ={index} className={`answer-flashcard
                       ${player1Selection === answer ? 'selected-answer' : ""}`
                       }
+                        
                         onClick={()=>{
                           console.log("Answer: ", answer);
                           setPlayer1Selection(answer); 
@@ -325,8 +366,10 @@ function App() {
                                 onClick={handleAnswers}>Confirm
                                 </button> 
                     </div>
+                  )}  
+                  
                   <div className='scoreboard'>
-                    <h1>SCORE : {player1Score}</h1>
+                    <h1>SCORE : {player1Score} | Winnings: ₱{winnings}.00</h1>
                   </div>
               </div>
             </>
@@ -392,7 +435,7 @@ function App() {
       </div>
 
       <div className='footer'>
-          <h5>Copyright Daniel, Angelo BSIT - 4 </h5>
+          <h5>© Daniel, Angelo BSIT - 4 </h5>
       </div>
     </>
     
